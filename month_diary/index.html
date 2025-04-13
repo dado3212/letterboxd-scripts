@@ -1,0 +1,195 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Letterboxd Diary Month</title>
+        <style>
+            body {
+                background-color: rgb(20, 24, 28);
+                color: rgb(85, 102, 119);
+
+                display: grid;
+                justify-content: center;
+                gap: 10px;
+                margin: 20px 0;
+                
+                font-size: 1.2em;
+            }
+
+            .movie {
+                position: relative;
+            }
+
+            .title {
+                display: none;
+            }
+
+            img.poster {
+                width: 100%;
+                border-radius: 4px;
+                border: 1px solid #ddeeff96;
+            }
+
+            .liked {
+                display: inline-block;
+                transform: scaleX(1.3);
+                position: relative;
+                bottom: 4px;
+                right: -3px;
+            }
+
+            .rating {
+                position: relative;
+                top: -5px;
+            }
+
+            .rewatched {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                font-size: 30px;
+                padding: 2px 2px 4px 4px;
+                background: linear-gradient(45deg, transparent 0%, transparent 50%, rgb(0 0 0 / 77%) 53%, #1A5AB6 53%, #1A5AB6 100%);
+                width: 40px;
+                height: 42px;
+                color: white;
+                border-top-right-radius: 4px;
+                text-align: right;
+                vertical-align: top;
+                line-height: 16px;
+        }
+        </style>
+        <script>
+            // Function to calculate the grid layout
+            function calculateGridLayout() {
+                const screenWidth = window.innerWidth - 30;
+                const screenHeight = window.innerHeight - 70;
+
+                const elementWidth = 30;
+                const elementHeight = 45;
+                const padding = 10;
+                const verticalAdd = 27;
+                const elementAspectRatio = elementWidth / elementHeight;
+
+                let isHorizontalLayout = true;
+
+                // Determine if the screen is taller than the element
+                if (screenWidth / screenHeight < elementAspectRatio) {
+                    isHorizontalLayout = false;
+                }
+
+                let minRow, maxRow, optimalColumns, optimalWidth, width, height;
+    let numMovies = 11
+                if (isHorizontalLayout) {
+                    minRow = 1
+                    maxRow = Math.floor(Math.sqrt(numMovies));
+                } else {
+                    minRow = Math.floor(Math.sqrt(numMovies)) - 1;
+                    maxRow = numMovies;
+                }
+
+                let coverage = 0;
+                for (var rows = minRow; rows <= maxRow; rows++) {
+                    let columns = Math.ceil(numMovies / rows);
+
+                    let maxSizedWidth = (screenWidth - (columns - 1) * padding) / columns;
+                    let maxSizedHeight = (screenHeight - (rows - 1) * padding - rows * verticalAdd) / rows;
+
+                    if (maxSizedWidth * elementHeight / elementWidth < maxSizedHeight) {
+                        width = maxSizedWidth;
+                        height = maxSizedWidth * elementHeight / elementWidth;
+                    } else {
+                        width = maxSizedHeight * elementWidth / elementHeight;
+                        height = maxSizedHeight;
+                    }
+
+                    const currentCoverage = (width * columns) * (height * rows) / (screenWidth * screenHeight);
+
+                    if (currentCoverage > coverage) {
+                        coverage = currentCoverage;
+                        optimalColumns = columns;
+                        optimalWidth = width;
+                    }
+                }
+
+                document.body.style.gridTemplateColumns = 'repeat(' + optimalColumns + ', auto)';
+                document.querySelectorAll('.movie').forEach(element => {
+                    element.style.width = optimalWidth + 'px';
+                });
+            }
+
+            // Call the function on page load
+            window.addEventListener('load', calculateGridLayout);
+            // and reload
+            window.addEventListener('resize', calculateGridLayout);
+        </script>
+    </head>
+    <body>
+    
+            <div class='movie'>
+            <span class='title'>Edge of Tomorrow</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/1/0/5/1/8/3/105183-edge-of-tomorrow-0-2000-0-3000-crop.jpg?v=114551fc99'>
+            <span class='rating'>★★★★½</span>
+        <span class='liked'>♥</span><span class='rewatched'>⟳</span></div>
+
+            <div class='movie'>
+            <span class='title'>Mickey 17</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/6/2/0/2/8/1/620281-mickey-17-0-2000-0-3000-crop.jpg?v=93e4d2af6d'>
+            <span class='rating'>★★★½</span>
+        </div>
+
+            <div class='movie'>
+            <span class='title'>Captain America: The Winter Soldier</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/sm/upload/he/p6/cc/lg/zt6b493XEL2OQ1bCSKccZ7V0iRY-0-2000-0-3000-crop.jpg?v=6296209106'>
+            <span class='rating'>★★½</span>
+        <span class='liked'>♥</span><span class='rewatched'>⟳</span></div>
+
+            <div class='movie'>
+            <span class='title'>The Joy Luck Club</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/3/9/3/4/5/39345-the-joy-luck-club-0-2000-0-3000-crop.jpg?v=8a585cdc91'>
+            <span class='rating'>★★★★</span>
+        <span class='liked'>♥</span></div>
+
+            <div class='movie'>
+            <span class='title'>Black Bag</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/1/1/1/6/7/5/5/1116755-black-bag-2025-0-2000-0-3000-crop.jpg?v=7dbc1baf6f'>
+            <span class='rating'>★★★½</span>
+        <span class='liked'>♥</span></div>
+
+            <div class='movie'>
+            <span class='title'>The Adventures of Tintin</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/sm/upload/tx/v5/nk/lz/rLsuszK65hQRl4KHmOtCNYV4kyD-0-2000-0-3000-crop.jpg?v=9bb0de40a2'>
+            <span class='rating'>★★★★</span>
+        <span class='liked'>♥</span><span class='rewatched'>⟳</span></div>
+
+            <div class='movie'>
+            <span class='title'>Novocaine</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/1/0/8/1/0/1/7/1081017-novocaine-2025-0-2000-0-3000-crop.jpg?v=bf4021de18'>
+            <span class='rating'>★½</span>
+        </div>
+
+            <div class='movie'>
+            <span class='title'>Arthur the King</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/5/4/5/3/5/9/545359-arthur-the-king-0-2000-0-3000-crop.jpg?v=cfc1b8fd08'>
+            <span class='rating'>★★</span>
+        </div>
+
+            <div class='movie'>
+            <span class='title'>Ne Zha</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/5/4/2/3/4/1/542341-ne-zha-0-2000-0-3000-crop.jpg?v=286c1db228'>
+            <span class='rating'>★★</span>
+        </div>
+
+            <div class='movie'>
+            <span class='title'>Bill Burr: Drop Dead Years</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/1/2/9/8/5/2/0/1298520-bill-burr-drop-dead-years-0-2000-0-3000-crop.jpg?v=fbde58337d'>
+            <span class='rating'></span>
+        </div>
+
+            <div class='movie'>
+            <span class='title'>Juno</span>
+            <img class='poster' src='https://a.ltrbxd.com/resized/film-poster/4/8/0/5/1/48051-juno-0-2000-0-3000-crop.jpg?v=19ad3fb7e5'>
+            <span class='rating'>★★★</span>
+        <span class='liked'>♥</span></div>
+</body>
+</html>
