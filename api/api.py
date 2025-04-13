@@ -1,5 +1,5 @@
 import requests, os, time, json
-from typing import Optional
+from typing import Optional, TypedDict
 from .secret import COOKIES, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, MEMBER_ID
 
 HEADERS = {
@@ -12,7 +12,7 @@ HEADERS = {
   'Accept-Language': 'en-US,en;q=0.9',
 }
 
-def fetch_token():
+def fetch_token() -> str:
   # Try and get the token from where we saved it in a file
   token = None
   token_path = os.path.join(os.path.dirname(__file__), 'token.txt')
@@ -45,7 +45,20 @@ def fetch_token():
 # TODO: Hacky, remove this to have a proper API authorization function
 HEADERS['Authorization'] = f'Bearer {fetch_token()}'
 
-def fetch_diary(member: str = MEMBER_ID, year: Optional[int] = None, month: Optional[int] = None):
+
+class DiaryEntry(TypedDict):
+  watched_date: str
+  name: str
+  rating: Optional[float]
+  rewatched: bool
+  liked: bool
+  poster_url: Optional[str]
+  tags: list[str]
+  review_id: str
+  film_id: str
+  average_rating: Optional[float]
+
+def fetch_diary(member: str = MEMBER_ID, year: Optional[int] = None, month: Optional[int] = None) -> list[DiaryEntry]:
   entries = []
   cursor = None
   num_pages = 1
@@ -129,7 +142,17 @@ def fetch_followers_list(member):
   print(json.dumps(a, indent=2))
   print(len(a['items']))
   
-def fetch_statistics(member):
+class MemberStatistics(TypedDict):
+  reviewLikes: int
+  diaryEntries: int
+  diaryEntriesThisYear: int
+  reviews: int
+  followers: int
+  following: int
+  watches: int
+  ratings: int
+
+def fetch_statistics(member: str) -> MemberStatistics:
   statistics_url = f'https://api.letterboxd.com/api/v0/member/{member}/statistics'
   response = requests.get(statistics_url, headers=HEADERS, cookies=COOKIES).json()
   return {
@@ -143,12 +166,12 @@ def fetch_statistics(member):
     'ratings': response['counts']['ratings'],
   }
   
-def followable(member):
+def followable(member: str) -> bool:
   url = f'https://api.letterboxd.com/api/v0/member/{member}/me'
   response = requests.get(url, headers=HEADERS, cookies=COOKIES).json()
   return not response['following'] and not response['followedBy'] and not response['blocking'] and not response['blockedBy']
 
-def get_member_id():
+def get_member_id() -> str:
   return MEMBER_ID
 
 def fetch_likers(review, force_review = False, include_no_review = False, include_review = False):
