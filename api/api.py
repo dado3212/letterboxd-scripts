@@ -76,6 +76,7 @@ def fetch_diary(member: str = MEMBER_ID, year: Optional[int] = None, month: Opti
         'tags': item.get('tags') or [],
         'review_id': item['id'],
         'film_id': item['film']['id'],
+        'average_rating': item['film'].get('rating'),
       })
 
     if 'next' not in response:
@@ -104,7 +105,7 @@ def fetch_watchlist(member: str = MEMBER_ID):
         'added_date': item['relationships'][-1]['relationship']['whenAddedToWatchlist'].split("T")[0],
         'name': item['name'],
         'poster_url': item['poster']['sizes'][-1]['url'] if 'poster' in item else None,
-        'id': item['id'],
+        'film_id': item['id'],
       })
 
     if 'next' not in response:
