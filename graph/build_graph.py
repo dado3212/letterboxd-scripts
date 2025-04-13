@@ -1,4 +1,3 @@
-import csv
 import plotly.graph_objects as go
 from collections import defaultdict
 import pandas as pd

@@ -47,6 +47,14 @@ python month_diary/create_diary.py
 python graph/build_graph.py
 ```
 
+```
+python pymf/followers.py
+```
+
+```
+python pymf/review_likes.py
+```
+
 ## TODO
 
 * Properly type API
