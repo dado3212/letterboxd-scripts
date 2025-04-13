@@ -45,7 +45,7 @@ def fetch_token():
 # TODO: Hacky, remove this to have a proper API authorization function
 HEADERS['Authorization'] = f'Bearer {fetch_token()}'
 
-def fetch_diary(year: Optional[int] = None, month: Optional[int] = None):
+def fetch_diary(member: str = MEMBER_ID, year: Optional[int] = None, month: Optional[int] = None):
   entries = []
   cursor = None
   num_pages = 1
@@ -54,7 +54,7 @@ def fetch_diary(year: Optional[int] = None, month: Optional[int] = None):
     params = {
       'perPage': '100',
       'sort': 'Date',
-      'member': MEMBER_ID,
+      'member': member,
       'memberRelationship': 'Owner',
       'where': 'HasDiaryDate',
     }
@@ -75,17 +75,18 @@ def fetch_diary(year: Optional[int] = None, month: Optional[int] = None):
         'poster_url': item['film']['poster']['sizes'][-1]['url'] if 'poster' in item['film'] else None,
         'tags': item.get('tags') or [],
         'review_id': item['id'],
+        'film_id': item['film']['id'],
       })
 
     if 'next' not in response:
       break
-    print(f"Going to page {num_pages}")
+    print(f"Diary page {num_pages}")
     num_pages += 1
     cursor = response['next']
     
   return entries
 
-def fetch_watchlist():
+def fetch_watchlist(member: str = MEMBER_ID):
   entries = []
   cursor = None
   num_pages = 1
@@ -97,17 +98,18 @@ def fetch_watchlist():
     }
     if cursor:
       params['cursor'] = cursor
-    response = requests.get(f'https://api.letterboxd.com/api/v0/member/{MEMBER_ID}/watchlist', headers=HEADERS, cookies=COOKIES, params=params).json()
+    response = requests.get(f'https://api.letterboxd.com/api/v0/member/{member}/watchlist', headers=HEADERS, cookies=COOKIES, params=params).json()
     for item in response['items']:
       entries.append({
-        'added_date': item['relationships'][0]['relationship']['whenAddedToWatchlist'].split("T")[0],
+        'added_date': item['relationships'][-1]['relationship']['whenAddedToWatchlist'].split("T")[0],
         'name': item['name'],
         'poster_url': item['poster']['sizes'][-1]['url'] if 'poster' in item else None,
+        'id': item['id'],
       })
 
     if 'next' not in response:
       break
-    print(f"Going to page {num_pages}")
+    print(f"Watchlist page {num_pages}")
     num_pages += 1
     cursor = response['next']
     

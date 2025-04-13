@@ -55,6 +55,10 @@ python pymf/followers.py
 python pymf/review_likes.py
 ```
 
+```
+python similarity/similarity.py
+```
+
 ## TODO
 
 * Properly type API
