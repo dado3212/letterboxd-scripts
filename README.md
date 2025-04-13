@@ -43,6 +43,10 @@ python star_animation/create_star_animation.py
 python month_diary/create_diary.py
 ```
 
+```
+python graph/build_graph.py
+```
+
 ## TODO
 
 * Properly type API

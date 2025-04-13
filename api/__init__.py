@@ -1,1 +1,1 @@
-from .api import fetch_diary
+from .api import fetch_diary, fetch_watchlist

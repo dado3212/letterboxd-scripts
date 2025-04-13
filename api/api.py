@@ -72,7 +72,36 @@ def fetch_diary(year: Optional[int] = None, month: Optional[int] = None):
         'rating': item.get('rating'), # can be unrated
         'rewatched': item['diaryDetails']['rewatch'],
         'liked': item['like'],
-        'poster_url': item['film']['poster']['sizes'][-1]['url'],
+        'poster_url': item['film']['poster']['sizes'][-1]['url'] if 'poster' in item['film'] else None,
+        'tags': item.get('tags') or [],
+      })
+
+    if 'next' not in response:
+      break
+    print(f"Going to page {num_pages}")
+    num_pages += 1
+    cursor = response['next']
+    
+  return entries
+
+def fetch_watchlist():
+  entries = []
+  cursor = None
+  num_pages = 1
+  
+  while True:
+    params = {
+      'perPage': '100',
+      'sort': 'DateLatestFirst',
+    }
+    if cursor:
+      params['cursor'] = cursor
+    response = requests.get(f'https://api.letterboxd.com/api/v0/member/{MEMBER_ID}/watchlist', headers=HEADERS, cookies=COOKIES, params=params).json()
+    for item in response['items']:
+      entries.append({
+        'added_date': item['relationships'][0]['relationship']['whenAddedToWatchlist'].split("T")[0],
+        'name': item['name'],
+        'poster_url': item['poster']['sizes'][-1]['url'] if 'poster' in item else None,
       })
 
     if 'next' not in response:

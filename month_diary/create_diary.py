@@ -1,6 +1,4 @@
-import csv, copy, math, requests
-from typing import TypedDict, Optional, Any
-from bs4 import BeautifulSoup
+import math
 
 # TODO: Fix this
 import sys, os
