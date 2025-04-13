@@ -1,4 +1,5 @@
-import requests, json, os, time, urllib
+import requests, os, time
+from typing import Optional
 from .secret import COOKIES, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, MEMBER_ID
 
 HEADERS = {
@@ -44,7 +45,7 @@ def fetch_token():
 # TODO: Hacky, remove this to have a proper API authorization function
 HEADERS['Authorization'] = f'Bearer {fetch_token()}'
 
-def fetch_diary():
+def fetch_diary(year: Optional[int] = None, month: Optional[int] = None):
   entries = []
   cursor = None
   num_pages = 1
@@ -57,20 +58,22 @@ def fetch_diary():
       'memberRelationship': 'Owner',
       'where': 'HasDiaryDate',
     }
+    if year:
+      params['year'] = year
+    if month:
+      params['month'] = month
     if cursor:
       params['cursor'] = cursor
     response = requests.get('https://api.letterboxd.com/api/v0/log-entries', headers=HEADERS, cookies=COOKIES, params=params).json()
     for item in response['items']:
-      try:
-        entries.append({
-          'watched_date': item['diaryDetails']['diaryDate'],
-          'name': item['film']['name'],
-          'rating': item.get('rating'), # can be unrated
-        })
-      except Exception as e:
-        print(e)
-        print(item)
-        raise e
+      entries.append({
+        'watched_date': item['diaryDetails']['diaryDate'],
+        'name': item['film']['name'],
+        'rating': item.get('rating'), # can be unrated
+        'rewatched': item['diaryDetails']['rewatch'],
+        'liked': item['like'],
+        'poster_url': item['film']['poster']['sizes'][-1]['url'],
+      })
 
     if 'next' not in response:
       break

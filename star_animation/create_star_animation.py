@@ -1,9 +1,10 @@
-import csv, copy, imageio, math
+import copy, imageio
 from typing import TypedDict, Optional, Any
 from PIL import Image, ImageDraw, ImageFont
+
+# TODO: Fix this
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/.."))
-
 from api import fetch_diary
 
 class Movie(TypedDict):

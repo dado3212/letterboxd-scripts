@@ -39,6 +39,16 @@ source venv/bin/activate
 python star_animation/create_star_animation.py
 ```
 
+```
+python month_diary/create_diary.py
+```
+
+## TODO
+
+* Properly type API
+* Fix imports
+* Individual READMEs
+
 ## Thanks
 
 There are lots of great resources for the APIs. Thanks to <TODO: insert links>
