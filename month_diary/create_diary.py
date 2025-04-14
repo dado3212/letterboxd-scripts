@@ -55,7 +55,7 @@ def create_website(movies):
             .rewatched {
                 position: absolute;
                 top: 0px;
-                right: 0px;
+                right: -2px;
                 font-size: 30px;
                 padding: 2px 2px 4px 4px;
                 background: linear-gradient(45deg, transparent 0%, transparent 50%, rgb(0 0 0 / 77%) 53%, #1A5AB6 53%, #1A5AB6 100%);
@@ -165,5 +165,5 @@ def create_website(movies):
     with open(os.path.join(os.path.dirname(__file__), 'index.html'), "w") as html_file:
         html_file.write(html_content)
 
-diary = fetch_diary(year=2025, month=3)
+diary = fetch_diary(year=int(sys.argv[1]), month=int(sys.argv[2]))
 create_website(diary[::-1])

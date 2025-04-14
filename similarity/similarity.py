@@ -3,8 +3,8 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/.."))
 from api import fetch_watchlist, fetch_diary, fetch_likers, fetch_statistics, followable, get_member_id
 
 # TODO: Currently only properly handles two users
-# users = ['JoWz', get_member_id()]
-users = ['6L7hn', get_member_id()] # '6L7hn', 
+users = ['JoWz', get_member_id()]
+# users = ['6L7hn', get_member_id()] # '6L7hn', 
 
 '''
 1. Get all watchlist movies
