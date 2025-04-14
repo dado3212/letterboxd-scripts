@@ -35,17 +35,43 @@ python -m pip install -r requirements.txt
 source venv/bin/activate
 ```
 
+### Review Animation
 ```
 python star_animation/create_star_animation.py
 ```
 
+Creates an animation of the evolution of your rating curve over time.
+
+![animation-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/395ae947-acab-479a-941e-5fae769da49f)
+
+### Diary Snapshot
+
 ```
-python month_diary/create_diary.py
+python month_diary/create_diary.py 2025 3
 ```
+
+Given a month and a year it creates an HTML file of all watches in that month that's autoformatted for screenshots.
+
+<img width="1319" alt="Screenshot 2025-04-14 at 3 47 53 PM" src="https://github.com/user-attachments/assets/0a782624-8ccb-4c7e-9e13-536326d4560f" />
+
+### Timeline Graph
 
 ```
 python graph/build_graph.py
 ```
+
+Creates an interactive HTML page with a graph of your movies over time, split down by total watched, ratings, tags, watchlist, etc.
+
+<img width="1464" alt="Screenshot 2025-04-14 at 3 59 33 PM" src="https://github.com/user-attachments/assets/1e013703-e543-4b0d-b3b7-467af657b0b3" />
+
+### Similarity
+```
+python similarity/similarity.py
+```
+
+Takes in a list of users and finds common movies in their watchlist, along with movies where they significantly disagreed (or agreed, but contrary to average ratings).
+
+<img width="702" alt="Screenshot 2025-04-14 at 4 10 45 PM" src="https://github.com/user-attachments/assets/f6484e8c-23af-44a4-8c2c-313da5a14ed6" />
 
 ```
 python pymf/followers.py
@@ -55,15 +81,13 @@ python pymf/followers.py
 python pymf/review_likes.py
 ```
 
-```
-python similarity/similarity.py
-```
-
 ## TODO
 
 * Properly type API
 * Fix imports
 * Individual READMEs
+* Improve reviews you might like/people you may follow algorithms
+* Add in list reordering by color
 
 ## Thanks
 
