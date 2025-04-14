@@ -331,3 +331,50 @@ def fetch_reviews_liked(member, film):
     cursor = response['next']
     
   return reviews
+
+class ListEntry(TypedDict):
+  name: str
+  position: int
+  poster_url: str
+
+def fetch_list(list_id: str) -> list[ListEntry]:
+  list_entries = []
+  cursor = None
+  num_pages = 1
+  
+  while True:
+    params = {
+      'perPage': '100',
+    }
+    if cursor:
+      params['cursor'] = cursor
+    response = requests.get(f'https://api.letterboxd.com/api/v0/list/{list_id}/entries', headers=HEADERS, cookies=COOKIES, params=params).json()
+    response_items = response['items']
+        
+    for item in response_items:
+      list_entries.append({
+        'name': item['film']['name'],
+        'position': item['entryId'],
+        'poster_url': item['film']['poster']['sizes'][-1]['url'] if 'poster' in item['film'] else None,
+      })
+
+    if 'next' not in response:
+      break
+    num_pages += 1
+    print(f"List page {num_pages}")
+    cursor = response['next']
+    
+  return list_entries
+
+def update_list_order(list_id: str) -> bool:
+  json = {
+      "entries": [
+          {
+            "action": "UPDATE",
+            "position": 0,
+            "newPosition": 1
+        }
+      ]
+  }
+  response = requests.patch(f'https://api.letterboxd.com/api/v0/list/{list_id}', headers=HEADERS, cookies=COOKIES, json=json)
+  return response.status_code == 200

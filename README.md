@@ -81,6 +81,10 @@ python pymf/followers.py
 python pymf/review_likes.py
 ```
 
+```
+python color_sort/sort.py
+```
+
 ## TODO
 
 * Properly type API
