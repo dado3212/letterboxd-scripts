@@ -1,10 +1,10 @@
 # <img src='https://a.ltrbxd.com/logos/letterboxd-decal-dots-pos-rgb-500px.png' height='34' /> Letterboxd Scripts
 
-There's a [Letterboxd API](https://api-docs.letterboxd.com/) but it's a mostly private API [here](https://letterboxd.com/api-beta/). In the past I've used a combination of TMDb's API, scraping Letterboxd, or using their `.zip` export (for [Letterboxd Gaps](https://alexbeals.com/projects/letterboxd/) and [letterboxd-anim](https://github.com/dado3212/letterboxd-anim) among others. But if you happen to get access to the API ([\*cough\*](#notyet)) then these are some of the scripts that I've used in the past.
+There's a [Letterboxd API](https://api-docs.letterboxd.com/) but it's a mostly private API [here](https://letterboxd.com/api-beta/). In the past I've used a combination of TMDb's API, scraping Letterboxd, or using their `.zip` export (for [Letterboxd Gaps](https://alexbeals.com/projects/letterboxd/) and [letterboxd-anim](https://github.com/dado3212/letterboxd-anim) among others. But if you happen to get access to the API ([\*cough\*](https://blog.alexbeals.com/posts/extracting-letterboxd-tokens-with-mitmproxy)) then these are some of the scripts that I've used in the past.
 
 ## Installation
 
-Get an API key, either through the formal process or...[other ways](#notyet).
+Get an API key, either through the formal process or...[other ways](https://blog.alexbeals.com/posts/extracting-letterboxd-tokens-with-mitmproxy).
 
 Create a `secret.py` file in the `api` folder with the following data. Details coming soon on how to best do this.
 ```
