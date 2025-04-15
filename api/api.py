@@ -378,3 +378,22 @@ def update_list_order(list_id: str) -> bool:
   }
   response = requests.patch(f'https://api.letterboxd.com/api/v0/list/{list_id}', headers=HEADERS, cookies=COOKIES, json=json)
   return response.status_code == 200
+
+def get_poster_urls(imdb_ids: list[str]) -> dict[str, Optional[str]]:
+  if (len(imdb_ids) > 100):
+    raise Exception("Too many IDs")
+  
+  params = {
+    'perPage': '100',
+    'filmId': [f'imdb:{imdb_id}' for imdb_id in imdb_ids]
+  }
+  response = requests.get(f'https://api.letterboxd.com/api/v0/films', headers=HEADERS, cookies=COOKIES, params=params).json()
+  response_items = response['items']
+  response_posters = {
+    [link['id'] for link in item['links'] if link['type'] == 'imdb'][0]:
+    item['poster']['sizes'][-1]['url'] if 'poster' in item else None
+    for item in response_items
+  }
+  return {
+    imdb_id: response_posters.get(imdb_id) for imdb_id in imdb_ids
+  }
