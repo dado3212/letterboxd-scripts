@@ -174,6 +174,10 @@ def followable(member: str) -> bool:
 def get_member_id() -> str:
   return MEMBER_ID
 
+def get_review_like_count(review_id: str) -> int:
+  response = requests.get(f'https://api.letterboxd.com/api/v0/log-entry/{review_id}/statistics', headers=HEADERS, cookies=COOKIES).json()
+  return response['counts']['likes']
+
 def fetch_likers(review, force_review = False, include_no_review = False, include_review = False):
   likers = []
   cursor = None

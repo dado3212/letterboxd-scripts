@@ -4,10 +4,22 @@ import pandas as pd
 
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/.."))
-from api import fetch_diary, fetch_watchlist
+from api import fetch_diary, fetch_watchlist, get_review_like_count
+
+# This will send one request for each review because AFAIK there's no way to 
+# query them in bulk :(
+INCLUDE_LIKES: bool = False
 
 movies = fetch_diary()
 watchlist = fetch_watchlist()
+
+if (INCLUDE_LIKES):
+  print('Fetching likes')
+  for i in range(len(movies)):
+    if i % 10 == 0:
+      print(f'..Movie {i+1}')
+    movies[i]['like_count'] = get_review_like_count(movies[i]['review_id'])
+  print('Done fetching likes')
 
 # Convert data into a DataFrame
 df = pd.DataFrame(movies)
@@ -25,6 +37,7 @@ grouped = df.groupby('watched_date')
 dates = []
 total_count = []
 liked_count = []
+review_likes_count = []
 rewatched_count = []
 watchlist_count = []
 rating_counts = defaultdict(list)
@@ -32,6 +45,7 @@ tag_counts = defaultdict(list)
 
 cumulative_total = 0
 cumulative_liked = 0
+cumulative_review_likes = 0
 cumulative_rewatched = 0
 cumulative_watchlist = 0
 cumulative_ratings = defaultdict(int)
@@ -47,6 +61,8 @@ for date in all_dates:
     cumulative_total += len(group)
     cumulative_liked += group['liked'].sum()
     cumulative_rewatched += group['rewatched'].sum()
+    if INCLUDE_LIKES:
+      cumulative_review_likes += group['like_count'].sum()
 
     all_tags = sum(group['tags'].tolist(), [])
     for tag in set(all_tags):
@@ -64,6 +80,8 @@ for date in all_dates:
   liked_count.append(cumulative_liked)
   rewatched_count.append(cumulative_rewatched)
   watchlist_count.append(cumulative_watchlist)
+  if INCLUDE_LIKES:
+    review_likes_count.append(cumulative_review_likes)
 
   for rating in cumulative_ratings:
     rating_counts[rating].append(cumulative_ratings[rating])
@@ -86,6 +104,8 @@ fig.add_trace(go.Scatter(x=dates, y=total_count, mode='lines', name='Total'))
 fig.add_trace(go.Scatter(x=dates, y=liked_count, mode='lines', name='Liked'))
 fig.add_trace(go.Scatter(x=dates, y=rewatched_count, mode='lines', name='Rewatched'))
 fig.add_trace(go.Scatter(x=dates, y=watchlist_count, mode='lines', name='Watchlist'))
+if INCLUDE_LIKES:
+  fig.add_trace(go.Scatter(x=dates, y=review_likes_count, mode='lines', name='Review Likes'))
 
 for rating, counts in rating_counts.items():
   if rating != -1:
