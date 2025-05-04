@@ -119,6 +119,7 @@ def fetch_watchlist(member: str = MEMBER_ID):
         'name': item['name'],
         'poster_url': item['poster']['sizes'][-1]['url'] if 'poster' in item else None,
         'film_id': item['id'],
+        'imdb_id': next((x['id'] for x in item['links'] if x['type'] == 'imdb'), None)
       })
 
     if 'next' not in response:
@@ -386,6 +387,8 @@ class ListEntry(TypedDict):
   name: str
   position: int
   poster_url: str
+  film_id: str
+  imdb_id: Optional[str]
 
 def fetch_list(list_id: str) -> list[ListEntry]:
   list_entries = []
@@ -406,6 +409,8 @@ def fetch_list(list_id: str) -> list[ListEntry]:
         'name': item['film']['name'],
         'position': item['entryId'],
         'poster_url': item['film']['poster']['sizes'][-1]['url'] if 'poster' in item['film'] else None,
+        'film_id': item['film']['id'],
+        'imdb_id': next((x['id'] for x in item['film']['links'] if x['type'] == 'imdb'), None)
       })
 
     if 'next' not in response:
