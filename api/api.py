@@ -178,7 +178,13 @@ def get_review_like_count(review_id: str) -> int:
   response = requests.get(f'https://api.letterboxd.com/api/v0/log-entry/{review_id}/statistics', headers=HEADERS, cookies=COOKIES).json()
   return response['counts']['likes']
 
-def fetch_likers(review, force_review = False, include_no_review = False, include_review = False):
+class ReviewLiker(TypedDict):
+  id: str # member_id
+  watched: bool
+  review_id: Optional[str]
+  rating: Optional[float]
+
+def fetch_likers(review, force_review = False, include_no_review = False, include_review = False) -> list[ReviewLiker]:
   likers = []
   cursor = None
   num_pages = 1
@@ -197,6 +203,8 @@ def fetch_likers(review, force_review = False, include_no_review = False, includ
           likers.append({
             'id': item['member']['id'],
             'watched': item['relationship']['watched'],
+            'review_id': item['relationship']['reviews'][0],
+            'rating': item['relationship'].get('rating'),
           })
       else:
         if (
@@ -335,6 +343,44 @@ def fetch_reviews_liked(member, film):
     cursor = response['next']
     
   return reviews
+
+class LBList(TypedDict):
+  id: str
+  name: str
+  description: Optional[str]
+  num_flms: int
+
+def fetch_lists() -> list[LBList]:
+  lists = []
+  cursor = None
+  num_pages = 1
+  
+  while True:
+    params = {
+      'perPage': '100',
+      'member': MEMBER_ID,
+      'memberRelationship': 'Owner',
+    }
+    if cursor:
+      params['cursor'] = cursor
+    response = requests.get(f'https://api.letterboxd.com/api/v0/lists', headers=HEADERS, cookies=COOKIES, params=params).json()
+    response_items = response['items']
+        
+    for item in response_items:
+      lists.append({
+        'id': item['id'],
+        'name': item['name'],
+        'description': item['descriptionLbml'] if 'descriptionLbml' in item else (item['description'] if 'description' in item else None),
+        'num_films': item['filmCount'],
+      })
+
+    if 'next' not in response:
+      break
+    num_pages += 1
+    print(f"List page {num_pages}")
+    cursor = response['next']
+    
+  return lists
 
 class ListEntry(TypedDict):
   name: str

@@ -1,1 +1,1 @@
-from .api import fetch_diary, fetch_watchlist, fetch_likers, fetch_statistics, followable, fetch_reviews, fetch_review_likes, fetch_reviews_liked, get_member_id, fetch_list, update_list_order, get_poster_urls, get_review_like_count
+from .api import fetch_diary, fetch_watchlist, fetch_likers, fetch_statistics, followable, fetch_reviews, fetch_review_likes, fetch_reviews_liked, get_member_id, fetch_list, update_list_order, get_poster_urls, get_review_like_count, fetch_lists

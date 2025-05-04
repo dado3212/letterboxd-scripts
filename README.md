@@ -78,11 +78,16 @@ python pymf/followers.py
 ```
 
 ```
-python pymf/review_likes.py
+python pymf/review_likes_film.py
+```
+
+```
+python pymf/review_likes_review.py
 ```
 
 ```
 python color_sort/sort.py
+python color_sort/download_posters.py
 ```
 
 ## TODO
