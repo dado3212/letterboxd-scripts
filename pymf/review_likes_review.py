@@ -3,8 +3,8 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/.."))
 from api import fetch_reviews, fetch_review_likes, fetch_likers, fetch_reviews_liked, get_member_id
 
 # Get a review
-film = 'iL4'
-review = '1b3d2H'
+film = 'KQMM'
+review = '9jqpwB'
 member_id = get_member_id()
 max_likes = 30
 min_likes = 0

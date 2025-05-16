@@ -117,6 +117,7 @@ def fetch_watchlist(member: str = MEMBER_ID):
       entries.append({
         'added_date': item['relationships'][-1]['relationship']['whenAddedToWatchlist'].split("T")[0],
         'name': item['name'],
+        'year': item['releaseYear'],
         'poster_url': item['poster']['sizes'][-1]['url'] if 'poster' in item else None,
         'film_id': item['id'],
         'imdb_id': next((x['id'] for x in item['links'] if x['type'] == 'imdb'), None)
@@ -181,6 +182,7 @@ def get_review_like_count(review_id: str) -> int:
 
 class ReviewLiker(TypedDict):
   id: str # member_id
+  name: str
   watched: bool
   review_id: Optional[str]
   rating: Optional[float]
@@ -203,6 +205,7 @@ def fetch_likers(review, force_review = False, include_no_review = False, includ
         if (len(item['relationship']['reviews']) > 0):
           likers.append({
             'id': item['member']['id'],
+            'name': item['member']['displayName'],
             'watched': item['relationship']['watched'],
             'review_id': item['relationship']['reviews'][0],
             'rating': item['relationship'].get('rating'),
@@ -215,6 +218,7 @@ def fetch_likers(review, force_review = False, include_no_review = False, includ
         ):
           likers.append({
             'id': item['member']['id'],
+            'name': item['member']['displayName'],
             'watched': item['relationship']['watched'],
           })
 
@@ -385,6 +389,7 @@ def fetch_lists() -> list[LBList]:
 
 class ListEntry(TypedDict):
   name: str
+  year: str
   position: int
   poster_url: str
   film_id: str
@@ -407,6 +412,7 @@ def fetch_list(list_id: str) -> list[ListEntry]:
     for item in response_items:
       list_entries.append({
         'name': item['film']['name'],
+        'year': item['film']['releaseYear'],
         'position': item['entryId'],
         'poster_url': item['film']['poster']['sizes'][-1]['url'] if 'poster' in item['film'] else None,
         'film_id': item['film']['id'],
