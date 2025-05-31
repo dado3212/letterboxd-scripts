@@ -3,12 +3,12 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/.."))
 from api import fetch_reviews, fetch_review_likes, fetch_likers, fetch_reviews_liked, get_member_id
 
 # Get a review
-film = 'KQMM'
-review = '9jqpwB'
+film = '7nZE'
+review = '7yGa5h'
 member_id = get_member_id()
 max_likes = 30
 min_likes = 0
-rating_range = [3.5, 5] # inclusive
+rating_range = [2.5, 5] # inclusive
 # Get everyone who liked that review and also reviewed the movie, and has < max_likes on their review
 review_likers = fetch_likers(review, force_review=True)
 for liker in review_likers:
@@ -37,6 +37,6 @@ for liker in review_likers:
         reciprocal += 1
         
     rate = reciprocal * 100.0 / len(likers)
-    if (rate > 45):
+    if (rate > 40):
       print(f'https://boxd.it/{liker['review_id']} [?] - {reciprocal} out of {len(likers)}: {reciprocal * 100.0 / len(likers)}')
     

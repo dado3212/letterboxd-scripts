@@ -74,6 +74,10 @@ Takes in a list of users and finds common movies in their watchlist, along with 
 <img width="702" alt="Screenshot 2025-04-14 at 4 10 45 PM" src="https://github.com/user-attachments/assets/f6484e8c-23af-44a4-8c2c-313da5a14ed6" />
 
 ```
+python pymf/film_fans.py
+```
+
+```
 python pymf/followers.py
 ```
 

@@ -236,6 +236,37 @@ def fetch_review_likes(review) -> int:
   except:
     print(response)
     return response['counts']['likes']
+  
+# movieIDs
+def fetch_fans(movies: list[str], max_pages: Optional[int] = None) -> list:
+  fans = []
+  cursor = None
+  num_pages = 1
+  
+  while max_pages is None or num_pages <= max_pages:
+    params = {
+      'perPage': '100',
+      'input': ' '.join([f'fan:{movie}' for movie in movies]),
+      'searchMethod': 'FullText',
+      'include': 'MemberSearchItem',
+    }
+    if cursor:
+      params['cursor'] = cursor
+    response = requests.get('https://api.letterboxd.com/api/v0/search', headers=HEADERS, cookies=COOKIES, params=params).json()
+    print
+    for item in response['items']:
+      fans.append({
+        'id': item['member']['id'],
+        'name': item['member']['displayName'],
+      })
+    
+    if 'next' not in response:
+      break
+    num_pages += 1
+    print(f"Going to page {num_pages}")
+    cursor = response['next']
+  
+  return fans
 
 def get_index_first_review_under_likes(reviews, max_likes: int) -> Optional[int]:
   left, right = 0, len(reviews) - 1

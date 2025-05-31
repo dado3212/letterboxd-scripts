@@ -2,7 +2,7 @@ import sys, os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/.."))
 from api import fetch_likers, fetch_statistics, followable
 
-review_seed = '9jqpwB'
+review_seed = '12469n'
 unwatched_likers = fetch_likers(review_seed, include_no_review=False, include_review=True)
 for unwatched_liker in unwatched_likers:
   info = fetch_statistics(unwatched_liker['id'])
