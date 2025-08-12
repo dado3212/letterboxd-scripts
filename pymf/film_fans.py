@@ -5,10 +5,11 @@ from api import fetch_fans, fetch_statistics, followable
 from itertools import combinations
 
 favorite_movies = [
-  '43bI', # about time
-  'cUqs', # your name
-  '1XLm', # incredibles
-  'dYmm', # cmbyn
+  # '43bI', # about time
+  # 'cUqs', # your name
+  # '1XLm', # incredibles
+  # 'dYmm', # cmbyn
+  '43bI'
 ]
 
 # Get all combinations of favorites, starting from the most of them

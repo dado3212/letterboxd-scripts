@@ -229,8 +229,8 @@ def fetch_likers(review, force_review = False, include_no_review = False, includ
     cursor = response['next']
   return likers
 
-def fetch_review_likes(review) -> int:
-  response = requests.get(f'https://api.letterboxd.com/api/v0/log-entry/{review}/statistics', headers=HEADERS, cookies=COOKIES).json()
+def fetch_review_likes(review, timeout: Optional[int] = None) -> int:
+  response = requests.get(f'https://api.letterboxd.com/api/v0/log-entry/{review}/statistics', headers=HEADERS, cookies=COOKIES, timeout=timeout).json()
   try:
     return response['counts']['likes']
   except:
@@ -286,17 +286,23 @@ def get_index_first_review_under_likes(reviews, max_likes: int) -> Optional[int]
   
 # NOTE: Because ReviewPopularity is not strictly like count, this can return reviews
 # that have more than max_likes (though it's hopefully close)
-def fetch_reviews(film, max_pages: Optional[int] = None, max_likes: Optional[int] = None):
+def fetch_reviews(film, min_rating: int, max_rating: int, max_pages: Optional[int] = None, max_likes: Optional[int] = None):
   reviews = []
   cursor = None
   num_pages = 1
   found_max = False
+  
+  valid_scores = [0.5,1,1.5,2,2.5,3,3.5,4,4.5,5]
+  assert min_rating in valid_scores, "Min rating must be a multiple of 0.5 between 0.5 and 5" 
+  assert max_rating in valid_scores, "Max rating must be a multiple of 0.5 between 0.5 and 5"     
   
   while max_pages is None or num_pages <= max_pages:
     params = {
       'perPage': '100',
       'sort': 'ReviewPopularity',
       'film': film,
+      'minRating': min_rating,
+      'maxRating': max_rating,
     }
     if cursor:
       params['cursor'] = cursor
