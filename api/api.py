@@ -1,4 +1,4 @@
-import requests, os, time, json
+import requests, os, time, json, re
 from typing import Optional, TypedDict
 from .secret import COOKIES, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, MEMBER_ID
 
@@ -283,10 +283,44 @@ def get_index_first_review_under_likes(reviews, max_likes: int) -> Optional[int]
       left = mid + 1
 
   return result
+
+def maybe_not_english(text) -> bool:
+  # Indonesian
+  if 'filmnya' in text:
+    return True
+  # Arabic codepointer
+  if bool(re.search(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]', text)):
+    return True
+  # Cyrillic
+  if bool(re.search(r'[\u0400-\u04FF]', text)):
+    return True
+  # Portuguese?
+  if ' e ' in text and ('ó' in text or 'í' in text):
+    return True
+  # French
+  if ' et ' in text and ('à' in text or 'è' in text):
+    return True
+  # German (check ä as well?)
+  if ' eine ' in text and ' die ' in text:
+    return True
+  return False
+
+class Review(TypedDict):
+  watched_date: str
+  name: str
+  rating: any
+  rewatched: bool
+  liked: bool
+  poster_url: Optional[str]
+  tags: list[any]
+  review_id: str
+  reviewer_id: str
+  reviewer_name: str
+  maybe_not_english: bool
   
 # NOTE: Because ReviewPopularity is not strictly like count, this can return reviews
 # that have more than max_likes (though it's hopefully close)
-def fetch_reviews(film, min_rating: int, max_rating: int, max_pages: Optional[int] = None, max_likes: Optional[int] = None):
+def fetch_reviews(film, min_rating: int, max_rating: int, max_pages: Optional[int] = None, max_likes: Optional[int] = None) -> list[Review]:
   reviews = []
   cursor = None
   num_pages = 1
@@ -336,6 +370,7 @@ def fetch_reviews(film, min_rating: int, max_rating: int, max_pages: Optional[in
         'review_id': item['id'],
         'reviewer_id': item['owner']['id'],
         'reviewer_name': item['owner']['displayName'],
+        'maybe_not_english': maybe_not_english(item['review']['lbml'])
       })
 
     if 'next' not in response:
