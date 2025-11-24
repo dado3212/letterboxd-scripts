@@ -295,13 +295,16 @@ def maybe_not_english(text) -> bool:
   if bool(re.search(r'[\u0400-\u04FF]', text)):
     return True
   # Portuguese?
-  if ' e ' in text and ('ó' in text or 'í' in text):
+  if (' e ' in text or ' é ' in text) and ('ó' in text or 'í' in text or 'ã' in text):
     return True
   # French
   if ' et ' in text and ('à' in text or 'è' in text):
     return True
   # German (check ä as well?)
   if ' eine ' in text and ' die ' in text:
+    return True
+  # Spanish
+  if ' que ' in text and ('á' in text or 'í' in text or 'é' in text):
     return True
   return False
 

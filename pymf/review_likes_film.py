@@ -2,11 +2,11 @@ import sys, os, requests
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__) + "/.."))
 from api import fetch_reviews, fetch_review_likes, fetch_likers, fetch_reviews_liked, get_member_id
 
-film = 'DUHM'
+film = 'mic8'
 member_id = get_member_id()
-max_likes = 60
+max_likes = 20
 max_rating = 5
-min_rating = 4
+min_rating = 1.5
 reviews = fetch_reviews(film, min_rating, max_rating, max_pages=10, max_likes=max_likes)
 for review in reviews:
   # Only English reviews please :D
