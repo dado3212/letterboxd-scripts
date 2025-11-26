@@ -224,7 +224,7 @@ def fetch_likers(review, force_review = False, include_no_review = False, includ
 
     if 'next' not in response:
       break
-    print(f"Going to page {num_pages}")
+    print(f"Going to page {num_pages} for likers")
     num_pages += 1
     cursor = response['next']
   return likers
@@ -263,7 +263,7 @@ def fetch_fans(movies: list[str], max_pages: Optional[int] = None) -> list:
     if 'next' not in response:
       break
     num_pages += 1
-    print(f"Going to page {num_pages}")
+    print(f"Going to page {num_pages} for fans")
     cursor = response['next']
   
   return fans
@@ -294,8 +294,17 @@ def maybe_not_english(text) -> bool:
   # Cyrillic
   if bool(re.search(r'[\u0400-\u04FF]', text)):
     return True
+  # Hebrew
+  if bool(re.search(r'[\u0590-\u05FF]', text)):
+    return True
+  # Thai
+  if bool(re.search(r"[\u0E00-\u0E7F]", text)):
+    return True
+  # Turkish
+  if 'ğ' in text and 'ş' in text:
+    return True
   # Portuguese?
-  if (' e ' in text or ' é ' in text) and ('ó' in text or 'í' in text or 'ã' in text):
+  if (' e ' in text or ' é ' in text or ' em ' in text) and ('ó' in text or 'í' in text or 'ã' in text and 'á' in text):
     return True
   # French
   if ' et ' in text and ('à' in text or 'è' in text):
@@ -357,6 +366,22 @@ def fetch_reviews(film, min_rating: int, max_rating: int, max_pages: Optional[in
       # Now you've found it, find the first entry that's under max_likes
       first_index = get_index_first_review_under_likes(response_items, max_likes)
       assert first_index is not None, "You have to find one I think"
+      # Need to make sure that the next i (for now 1) are ALSO under that limit to be convinced that we're in that range
+      is_real_range = True
+      for i in range(0, 1):
+        if (first_index + i + 1) >= len(response_items):
+          is_real_range = False
+          break
+        if fetch_review_likes(response_items[first_index + i + 1]['id']) > max_likes:
+          is_real_range = False
+          break
+      if not is_real_range:
+        if 'next' not in response:
+          break
+        print(f"Skipping page, too popular")
+        cursor = response['next']
+        continue
+        
       response_items = response_items[first_index:]
       # From now on, don't need to check any of this while paginating
       found_max = True
@@ -379,7 +404,7 @@ def fetch_reviews(film, min_rating: int, max_rating: int, max_pages: Optional[in
     if 'next' not in response:
       break
     num_pages += 1
-    print(f"Going to page {num_pages}")
+    print(f"Going to page {num_pages} for reviews")
     cursor = response['next']
     
   return reviews
@@ -419,7 +444,7 @@ def fetch_reviews_liked(member, film):
     if 'next' not in response:
       break
     num_pages += 1
-    print(f"Going to page {num_pages}")
+    print(f"Going to page {num_pages} for reviews liked")
     cursor = response['next']
     
   return reviews
